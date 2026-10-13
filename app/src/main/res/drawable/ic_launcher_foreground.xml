@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Monitor / Tablet CBT Frame -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M24,24 h60 a4,4 0 0,1 4,4 v44 a4,4 0 0,1 -4,4 h-60 a4,4 0 0,1 -4,-4 v-44 a4,4 0 0,1 4,-4 z" />
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M26,26 h56 v10 h-56 z" />
+    <!-- Screen inner area -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M26,38 h56 v32 h-56 z" />
+    <!-- Stand -->
+    <path
+        android:fillColor="#64748B"
+        android:pathData="M50,76 h8 v6 h-8 z M42,82 h24 v3 h-24 z" />
+    <!-- Checkmarks / Lines inside the exam screen -->
+    <path
+        android:fillColor="#22C55E"
+        android:pathData="M31,46 l3,3 l6,-7 l1.5,1.5 l-7.5,8.5 l-4.5,-4.5 z" />
+    <path
+        android:fillColor="#94A3B8"
+        android:pathData="M44,48 h32 v2.5 h-32 z" />
+    <path
+        android:fillColor="#E11D48"
+        android:pathData="M32,58 h5 v5 h-5 z" />
+    <path
+        android:fillColor="#94A3B8"
+        android:pathData="M44,59 h26 v2.5 h-26 z" />
+    <!-- Graduation Cap / Scholar accent in top-right -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M65,19 L78,24 L65,29 L52,24 Z" />
+    <path
+        android:fillColor="#D97706"
+        android:pathData="M73,26.5 v6 c0,2.5 -3.5,4.5 -8,4.5 s-8,-2 -8,-4.5 v-6 l8,3 z" />
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M78,24 v8.5 h1.5 v-9 z" />
+</vector>

@@ -1,0 +1,6 @@
+{
+  "name": "CUET Mock Test",
+  "description": "NTA CBT pattern mock test application for CUET UG aspirants featuring realistic split-screen CBT interface, official question palette, timed exams, and in-depth performance analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

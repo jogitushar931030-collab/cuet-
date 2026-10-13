@@ -1,0 +1,80 @@
+{
+  "entities": {
+    "ExamProgress": {
+      "title": "ExamProgress",
+      "description": "Student current exam progress snapshot",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated student user ID" },
+        "subjectId": { "type": "string", "description": "Subject identifier" },
+        "subjectTitle": { "type": "string", "description": "Subject title" },
+        "testMode": { "type": "string", "description": "Full mock or topic practice" },
+        "remainingSeconds": { "type": "integer", "description": "Seconds remaining on timer" },
+        "currentIndex": { "type": "integer", "description": "Active question index" },
+        "answersJson": { "type": "string", "description": "Serialized questions status and selection array" },
+        "candidateName": { "type": "string", "description": "Candidate name" },
+        "candidateRollNo": { "type": "string", "description": "Candidate roll number" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last saved timestamp" }
+      },
+      "required": [
+        "userId",
+        "subjectId",
+        "subjectTitle",
+        "testMode",
+        "remainingSeconds",
+        "currentIndex",
+        "answersJson",
+        "candidateName",
+        "candidateRollNo",
+        "updatedAt"
+      ]
+    },
+    "CompletedExam": {
+      "title": "CompletedExam",
+      "description": "Historical record of submitted test attempts and scores",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated student user ID" },
+        "subjectId": { "type": "string", "description": "Subject identifier" },
+        "subjectTitle": { "type": "string", "description": "Subject title" },
+        "testMode": { "type": "string", "description": "Exam mode" },
+        "candidateName": { "type": "string", "description": "Candidate name" },
+        "candidateRollNo": { "type": "string", "description": "Candidate roll number" },
+        "totalScore": { "type": "integer", "description": "Final score" },
+        "maxScore": { "type": "integer", "description": "Max possible score" },
+        "correctCount": { "type": "integer", "description": "Number of correct answers" },
+        "incorrectCount": { "type": "integer", "description": "Number of incorrect answers" },
+        "unattemptedCount": { "type": "integer", "description": "Number of unattempted questions" },
+        "accuracyPercentage": { "type": "number", "description": "Accuracy percentage" },
+        "totalTimeTakenSeconds": { "type": "integer", "description": "Total duration spent in seconds" },
+        "completedAt": { "type": "string", "format": "date-time", "description": "Completion timestamp" }
+      },
+      "required": [
+        "userId",
+        "subjectId",
+        "subjectTitle",
+        "testMode",
+        "candidateName",
+        "candidateRollNo",
+        "totalScore",
+        "maxScore",
+        "correctCount",
+        "incorrectCount",
+        "unattemptedCount",
+        "accuracyPercentage",
+        "totalTimeTakenSeconds",
+        "completedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/exam_progress/{docId}": {
+      "schema": "ExamProgress",
+      "description": "Active in-progress exam state"
+    },
+    "/users/{userId}/completed_exams/{docId}": {
+      "schema": "CompletedExam",
+      "description": "Submitted exam results and analytics"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidExamProgress(data) {
+      return data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128 &&
+             data.subjectId is string && data.subjectId.size() > 0 && data.subjectId.size() <= 100 &&
+             data.subjectTitle is string && data.subjectTitle.size() > 0 && data.subjectTitle.size() <= 200 &&
+             data.testMode is string && data.testMode.size() > 0 && data.testMode.size() <= 50 &&
+             data.remainingSeconds is int && data.remainingSeconds >= 0 &&
+             data.currentIndex is int && data.currentIndex >= 0 && data.currentIndex <= 500 &&
+             data.answersJson is string && data.answersJson.size() <= 100000 &&
+             data.candidateName is string && data.candidateName.size() <= 100 &&
+             data.candidateRollNo is string && data.candidateRollNo.size() <= 100 &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidCompletedExam(data) {
+      return data.userId is string && data.userId.size() > 0 && data.userId.size() <= 128 &&
+             data.subjectId is string && data.subjectId.size() > 0 && data.subjectId.size() <= 100 &&
+             data.subjectTitle is string && data.subjectTitle.size() > 0 && data.subjectTitle.size() <= 200 &&
+             data.testMode is string && data.testMode.size() > 0 && data.testMode.size() <= 50 &&
+             data.candidateName is string && data.candidateName.size() <= 100 &&
+             data.candidateRollNo is string && data.candidateRollNo.size() <= 100 &&
+             data.totalScore is int &&
+             data.maxScore is int &&
+             data.correctCount is int && data.correctCount >= 0 &&
+             data.incorrectCount is int && data.incorrectCount >= 0 &&
+             data.unattemptedCount is int && data.unattemptedCount >= 0 &&
+             data.accuracyPercentage is number && data.accuracyPercentage >= 0 && data.accuracyPercentage <= 100 &&
+             data.totalTimeTakenSeconds is int && data.totalTimeTakenSeconds >= 0 &&
+             data.completedAt is timestamp && data.completedAt <= request.time;
+    }
+
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+
+      match /exam_progress/{docId} {
+        allow get: if isOwner(userId) && isValidId(docId);
+        allow list: if isOwner(userId);
+
+        allow create, update: if isOwner(userId) &&
+                                 isValidId(docId) &&
+                                 incoming().userId == request.auth.uid &&
+                                 incoming().keys().hasAll([
+                                   'userId', 'subjectId', 'subjectTitle', 'testMode',
+                                   'remainingSeconds', 'currentIndex', 'answersJson',
+                                   'candidateName', 'candidateRollNo', 'updatedAt'
+                                 ]) &&
+                                 incoming().keys().hasOnly([
+                                   'userId', 'subjectId', 'subjectTitle', 'testMode',
+                                   'remainingSeconds', 'currentIndex', 'answersJson',
+                                   'candidateName', 'candidateRollNo', 'updatedAt'
+                                 ]) &&
+                                 isValidExamProgress(incoming());
+
+        allow delete: if isOwner(userId) && isValidId(docId);
+      }
+
+      match /completed_exams/{docId} {
+        allow get: if isOwner(userId) && isValidId(docId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(docId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll([
+                           'userId', 'subjectId', 'subjectTitle', 'testMode',
+                           'candidateName', 'candidateRollNo', 'totalScore',
+                           'maxScore', 'correctCount', 'incorrectCount',
+                           'unattemptedCount', 'accuracyPercentage',
+                           'totalTimeTakenSeconds', 'completedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'subjectId', 'subjectTitle', 'testMode',
+                           'candidateName', 'candidateRollNo', 'totalScore',
+                           'maxScore', 'correctCount', 'incorrectCount',
+                           'unattemptedCount', 'accuracyPercentage',
+                           'totalTimeTakenSeconds', 'completedAt'
+                         ]) &&
+                         isValidCompletedExam(incoming());
+
+        allow update: if false;
+        allow delete: if isOwner(userId) && isValidId(docId);
+      }
+    }
+  }
+}
